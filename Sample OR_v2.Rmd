@@ -1,0 +1,69 @@
+---
+title: "sample OR"
+author: "me"
+date: "2023-07-14"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, message=FALSE,warning = FALSE)
+```
+
+Une étude où nous voulons prédire la présence
+d'une maladie (variable binaire: 0 = absent, 1 = présent)
+en fonction de l'âge du patient (variable quantitative) et de l'administration d'un traitement
+(variable binaire: 0 = placebo, 1 = traitement actif).
+
+
+```{r}
+
+data_reg_bin<-read.csv2("data_reg_bin.csv")
+```
+
+
+```{r}
+
+data_reg_bin$Maladie <- as.factor(data_reg_bin$Maladie)
+data_reg_bin$Traitement <- as.factor(data_reg_bin$Traitement)
+
+# Affichage des premières lignes 
+print("Aperçu du jeu de données:")
+print(head(data_reg_bin))
+print(paste("Dimensions du jeu de données:", nrow(data_reg_bin), "lignes,", ncol(data_reg_bin), "colonnes"))
+```
+
+# Régression binomiale (régression logistique) 
+```{r}
+
+# Pour une régression binomiale, spécifier `family = binomial(link = "logit")`.
+
+
+# Modèle: Maladie en fonction de l'âge et du traitement
+modele_binomial <- glm(Maladie ~ Age + Traitement, data = data_reg_bin, family = binomial(link = "logit"))
+
+print("Résumé du modèle de régression binomiale:")
+print(summary(modele_binomial))
+```
+
+ Pour interpréter les coefficients en termes d'Odds Ratio (OR),
+ nous devons exponentier les coefficients.
+ Un OR > 1 signifie une augmentation des chances de l'événement (Maladie=1).
+ Un OR < 1 signifie une diminution des chances de l'événement (Maladie=1).
+```{r}
+
+print("Odds Ratios (OR) et intervalles de confiance (IC 95%):")
+
+# Calcul des Odds Ratios
+odds_ratios <- exp(coef(modele_binomial))
+
+print(odds_ratios)
+
+# Calcul des intervalles de confiance pour les Odds Ratios
+conf_intervals <- exp(confint(modele_binomial))
+
+print(conf_intervals)
+```
+
+
+ 

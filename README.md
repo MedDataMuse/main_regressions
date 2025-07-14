@@ -1,2 +1,3 @@
 Régressions les plus courantes
-"Sample OR_v2":régression binomiale
+
+"Sample OR_v2": régression binomiale
